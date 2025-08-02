@@ -123,7 +123,7 @@ html: `
             Start uploading your photos, audios, and unforgettable stories now. 📸🎙️
           </p>
           <div style="margin-top: 22px;">
-            <a href="https://yourmemorie.app/home" style="display: inline-block; background: #f7c942; color: white; padding: 12px 28px; border-radius: 30px; font-weight: bold; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.12);">
+            <a href="https://memorie-amber.vercel.app/login" style="display: inline-block; background: #f7c942; color: white; padding: 12px 28px; border-radius: 30px; font-weight: bold; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.12);">
               ➕ Create Your First Memory
             </a>
           </div>
