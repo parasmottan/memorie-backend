@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Middleware
 app.use(cors({
-  origin: ['https://memorie-amber.vercel.app'],
+  origin: ['https://memoriekeeper.vercel.app'],
   credentials: true
 }));
 app.use(express.json({ limit: '30mb' }));
