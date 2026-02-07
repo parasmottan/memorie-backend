@@ -7,37 +7,49 @@ import otpRoute from './routes/otpRoute.js';
 import cookieParser from 'cookie-parser';
 import memoryRoutes from "./routes/memory.js";
 
-
-
 dotenv.config();
 
 const app = express();
 
+// 🔌 Middleware (ORDER MATTERS)
+app.use(cookieParser());
 
-
-app.use(cookieParser())
-
-// 🟢 MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("✅ MongoDB connected"))
-.catch((err) => {
-  console.error("❌ MongoDB connection error:", err.message);
-});
-
-// Middleware
-app.use(cors({
-  origin: ['https://memoriekeeper.vercel.app'],
-  credentials: true
-}));
 app.use(express.json({ limit: '30mb' }));
 
-// Routes
-app.use('/auth', authRoutes);
-app.use('/otp', otpRoute);
-app.use("/api/memory", memoryRoutes);
-// app.use("/api", memoryRoutes);
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow server-to-server & Postman
+    if (!origin) return callback(null, true);
 
+    // allow all Vercel preview + prod
+    if (
+      origin.endsWith('.vercel.app') ||
+      origin === 'http://localhost:5173'
+    ) {
+      return callback(null, true);
+    }
 
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
+// ✅ Preflight fix
+app.options('*', cors());
+
+// 🟢 MongoDB Connection (non-blocking)
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) =>
+    console.error("❌ MongoDB connection error:", err.message)
+  );
+
+// 🔗 Routes (CONSISTENT PREFIX)
+app.use('/api/auth', authRoutes);
+app.use('/api/otp', otpRoute);
+app.use('/api/memory', memoryRoutes);
 
 export default app;
